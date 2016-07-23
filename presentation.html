@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lambda Expressions and the Stream API in Java 8: A Quick Overview</title>
+        <meta charset="utf-8">
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+            @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+            @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+            body { font-family: 'Droid Serif'; }
+            h1, h2, h3 {
+                font-family: 'Yanone Kaffeesatz';
+                font-weight: normal;
+            }
+            .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+        </style>
+    </head>
+    <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Lambda Expressions and the Stream API in Java 8
+## A Quick Overview
+
+Matt Wittmann
+
+---
+
+# Introduction
+
+* Some functional-programming concepts have been introduced in Java 8
+* The lambda-expression syntax was introduced to support the new Stream API
+* The Stream API offers an alternative approach to programming: as a series of
+  transformations on data
+
+---
+
+# Functional Programming
+
+* Theoretical backing is the lambda calculus, an alternative theory of computation by Alonzo Church
+* Often contrasted with imperative programming along with declarative programming more generally
+* Java 8 borrows functional concepts but cannot be said to be a functional language
+
+---
+
+# Some Key Concepts in Functional Programming
+
+* **Immutability:** Declared variables do not change.
+* **Referential transparency:** An expression can be replaced by the value it results in.
+* **First-class functions:** Functions are values like numbers, strings, and objects and can be passed as arguments
+  to other functions or returned from other functions.
+* **Higher-order functions:** These functions take a function as an argument. These are a powerful abstraction
+  in functional programming with some well-known examples being *map*, *filter*, and *reduce*.
+* **No side-effects:** Function application does not mutate some implicit global state or environment.
+
+---
+
+# Lambda Expression Syntax
+
+* Java 8 provides some syntactic sugar to represent anonymous functions.
+* Under the hood, these are anonymous classes implementing a *functional interface*.
+* New type-inferencing bridges the syntactical gap.
+* Methods with the appropriate shape can be referenced as functions, too.
+* The arrow operator (`->`) is used to separate the parameter list from the function body in a lambda expression.
+* For zero arguments, an empty parameter list (`()`) is provided.
+* If a lambda expression's function body needs multiple statements, curly braces and semicolons should be used,
+  and the `return` expression must be made explicit.
+
+---
+
+# Example
+
+```
+int[] numbers = { 1, 2, 3 };
+
+// This:
+
+java.util.Arrays.stream(numbers)
+    .map(number -> ++number)
+    .forEach(System.out::println);
+
+// Is equivalent to:
+
+for (int number : numbers) {
+  ++number;
+  System.out.println(number);
+}
+```
+
+---
+
+# Desugaring the Syntax
+
+```
+stream.map(number -> ++number);
+
+// Can also be written as:
+
+stream.map(number -> {
+  return ++number;
+});
+
+// Or as:
+
+stream.map(new IntUnaryOperator() {
+  @Override
+  public int applyAsInt(int number) {
+    return ++number;
+  }
+});
+
+// It's all just anonymous classes!
+```
+
+---
+
+# More on Functional Interfaces
+
+* Any interface with one and only one abstract method is automatically a functional interface
+* This can be enforced at compile time with the `@java.lang.FunctionalInterface` annotation
+* Many interfaces you know and love from the Java API have been given this annotation like:
+  * `java.util.concurrent.Callable`
+  * `java.lang.Runnable`
+* Java 8 has added numerous new functional interfaces to support a more functional style of programming
+  and the Stream API, including specialized versions meant to work with unboxed primitive types
+  * `java.util.function.Function`
+  * `java.util.function.BiFunction`
+  * `java.util.function.IntFunction`
+  * `java.util.function.IntUnaryOperator`
+
+---
+
+# The Stream API
+
+* The killer app for lambda expressions
+* An abstraction representing a series of values that can be processed
+* Backed by a collection, array, generator, etc.
+* "Laziness seeking," as
+  [the JavaDocs](https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html#package.description)
+  put it, meaning there is a preference to evaluate only what's needed at the time; this is critical
+  for *infinite streams*
+* Transformations on underlying values are made using methods implementing common higher-order functions
+* Specialized stream types exists to stream the primitive types
+
+---
+
+# Some Higher-Order Functions in the Stream API
+
+* **map:** Transforms each value into another value using a given function.
+* **filter:** Returns a substream of elements that match the given predicate.
+* **flatMap:** Performs a transformation on the value that yields a stream; all the separate streams are in turn
+  flattened into only one stream.
+* **reduce:** Takes some identity (baseline) value as a starting point and applies a function to repeatedly reduce
+  the stream down to one single value; the function takes two arguments: the current value and the accumulated result.
+* **max**, **min:** Finds the maximum and minimum value respectively using the given comparator.
+* **forEach:** Does something for each element of the stream. This can be a smell that the code is not closely
+  aligned with the functional paradigm as it is inherently relying on a side-effect.
+* **collect:** Performs a kind of reduction. This can be used to, for example, transform a stream into a new list
+  or other collection type. Several collectors are predefined.
+
+    </textarea>
+        <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+        </script>
+        <script>
+            var slideshow = remark.create();
+        </script>
+    </body>
+</html>
