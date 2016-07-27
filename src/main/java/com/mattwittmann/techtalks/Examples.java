@@ -67,4 +67,14 @@ public class Examples {
                      .reduce((left, right) -> left * right)
                      .orElse(0);
     }
+
+    /**
+     * Demonstrates {@link java.util.stream.Stream#flatMap}.
+     */
+    static List<String> say(List<String> what, List<String> who) {
+        return who.stream()
+                  .flatMap(name -> what.stream()
+                                       .map(sentence -> String.format(sentence, name)))
+                  .collect(Collectors.toList());
+    }
 }

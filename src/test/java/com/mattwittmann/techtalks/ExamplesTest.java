@@ -35,4 +35,14 @@ public class ExamplesTest {
         long[] numbers = {};
         assertThat(Examples.multiplyAll(numbers), is(equalTo(0l)));
     }
+
+    @Test
+    public void verifySaySaysTheRightThings() {
+        List<String> who = asList("Matt", "Pierre", "Yui");
+        List<String> what = asList("Hello, %s!", "Goodbye, %s!");
+        List<String> sayings = asList("Hello, Matt!", "Goodbye, Matt!",
+                                      "Hello, Pierre!", "Goodbye, Pierre!",
+                                      "Hello, Yui!", "Goodbye, Yui!");
+        assertThat(Examples.say(what, who), is(sayings));
+    }
 }
