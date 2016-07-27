@@ -152,8 +152,9 @@ stream.map(new IntUnaryOperator() {
 * **filter:** Returns a substream of elements that match the given predicate.
 * **flatMap:** Performs a transformation on the value that yields a stream; all the separate streams are in turn
   flattened into only one stream.
-* **reduce:** Takes some identity (baseline) value as a starting point and applies a function to repeatedly reduce
-  the stream down to one single value; the function takes two arguments: the current value and the accumulated result.
+* **reduce:** Optionally takes some identity (baseline) value as a starting point and applies a function to repeatedly
+  reduce the stream down to one single value; the function takes two arguments: the current value and some accumulated
+  result. The function passed to `reduce` must have the mathematical property of *associativity*.
 * **max**, **min:** Finds the maximum and minimum value respectively using the given comparator.
 * **forEach:** Does something for each element of the stream. This can be a smell that the code is not closely
   aligned with the functional paradigm as it is inherently relying on a side-effect.
